@@ -1,0 +1,43 @@
+.content-wrapper {
+  // padding-bottom: 3em;
+}
+
+.page-header {
+  @include boxShadow(1);
+
+  margin: 0 0 1em;
+  background: $black;
+}
+
+.site-heading {
+  font-weight: 400;
+  font-size: 1em;
+  line-height: 1;
+  text-align: center;
+
+  a {
+    padding: 0.5em 1.125em;
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+
+    &:hover {
+      color: $white;
+      background: lighten($black, 20%);
+    }
+  }
+}
+
+.page-footer {
+  padding: 0 0 1em;
+  text-align: right;
+}
+
+.is-hidden {
+  display: none;
+}
+
+.error {
+  padding-left: 0.25em;
+  background: lighten($orange, 20%);
+}

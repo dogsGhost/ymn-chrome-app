@@ -1,0 +1,56 @@
+.btn {
+  @include boxShadow(1);
+
+  display: inline-block;
+  padding: 0 1.125em;
+  font-size: 1em;
+  line-height: 2.625;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #fff;
+  border: none;
+  border-radius: 0.25em;
+  cursor: pointer;
+
+  &:hover {
+    color: #fff;
+    @include boxShadow(2);
+  }
+
+  &-primary {
+    background: $blue;
+
+    &:hover {
+      background: darken($blue, 3%);
+    }
+  }
+
+  &-alert {
+    background: $orange;
+
+    &:hover {
+      background: darken($orange, 3%);
+    }
+  }
+
+  &-warning {
+    background: $yellow;
+
+    &:hover {
+      background: darken($yellow, 3%);
+    }
+  }
+
+  &-lrg {
+    font-size: 1.25em;
+  }
+
+  &-full {
+    width: 100%;
+  }
+
+  &-sm {
+    font-size: 80%;
+  }
+}

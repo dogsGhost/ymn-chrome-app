@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font: 1em/1.5 'Open Sans', sans-serif;
+  color: $black;
+  background: $light-grey;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.25em;
+}
+
+h4 {
+  font-size: 1.125em;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: $blue;
+
+  &:hover {
+    color: darken($blue, 25%);
+  }
+}
