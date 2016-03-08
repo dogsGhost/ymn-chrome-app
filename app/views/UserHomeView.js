@@ -1,18 +1,18 @@
 import React from 'react';
 import ItemList from '../components/ItemList';
+import LinkTo from '../components/LinkTo';
 
 const UserHomeView = (props) => (
   <div>
     <div className="section-callout">
-      <button
-        className="btn btn-primary btn-full btn-lrg btn-addItem"
-        onClick={(e) => {
-          e.preventDefault();
-          props.setView('ADD_ITEM');
-        }}
-        type="button">
-        Add Item
-      </button>
+      <LinkTo
+        linkTo="ADD_ITEM"
+        name="addItem"
+        setView={props.setView}
+        size="lrg"
+        isFull="true">
+        Return To List
+      </LinkTo>
     </div>
 
     <div className="section-header">

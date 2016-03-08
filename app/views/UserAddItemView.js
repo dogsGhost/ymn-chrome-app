@@ -1,18 +1,17 @@
 import React from 'react';
 import AddItemForm from '../components/AddItemForm';
+import LinkTo from '../components/LinkTo';
 
 const UserAddItemView = (props) => (
   <div>
     <div className="section-callout">
-      <button
-        className="btn btn-alert btn-lrg btn-full"
-        onClick={(e) => {
-          e.preventDefault();
-          props.setView('');
-        }}
-        type="button">
+      <LinkTo
+        setView={props.setView}
+        size="lrg"
+        style="alert"
+        isFull="true">
         Return To List
-      </button>
+      </LinkTo>
     </div>
 
 
