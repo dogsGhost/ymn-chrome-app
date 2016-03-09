@@ -25,7 +25,7 @@ const AddItemForm = (props) => (
       <input
         className="input"
         id="itemDate"
-        max={props.maxDate}
+        max={props.curDate}
         onChange={props.updateInputValue}
         required
         type="date"

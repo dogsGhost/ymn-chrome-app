@@ -3,6 +3,7 @@ import Rebase from 're-base';
 import Header from '../layouts/Header';
 import AuthContainer from './AuthContainer';
 import NoAuthContainer from './NoAuthContainer';
+import { normalizeDateString } from '../utils';
 
 let base = Rebase.createClass('https://ymn-react.firebaseio.com');
 
@@ -22,8 +23,8 @@ export default class App extends Component {
 
       // value of date field in add-item form
       itemDate: '',
-      // max date value for `iteDate`
-      maxDate: '', // TODO: set a default
+      // max date value for `itemDate`
+      curDate: '',
 
       // email value for various fields in non-auth views
       email: '',
@@ -44,16 +45,21 @@ export default class App extends Component {
 
   componentDidMount() {
     if (this.state.session) {
-      // base.synceState('items', {
-      //   context: this,
-      //   state: 'items',
-      //   asArray: true,
-      //   queries: {
-      //     orderByChild: 'userId',
-      //     equalTo: this.state.session.uid
-      //   }
-      // })
+      base.syncState('items', {
+        context: this,
+        state: 'items',
+        asArray: true,
+        queries: {
+          orderByChild: 'userId',
+          equalTo: this.state.session.uid
+        }
+      });
     }
+
+    // TODO: move this so it fires every time UserAddItemView is mounted
+    this.setState({
+      curDate: normalizeDateString(new Date())
+    });
   }
 
   _syncAuth() {
@@ -155,8 +161,11 @@ export default class App extends Component {
     console.log('update item');
   }
 
-  _handleHideItem() {
+  _handleHideItem(id) {
     console.log('hide item');
+    this.setState({
+      hiddenItems: this.state.hiddenItems.concat([id])
+    });
   }
 
   _handleUnhideAllItems() {
