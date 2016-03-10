@@ -11,7 +11,7 @@ const UserHomeView = (props) => (
         setView={props.setView}
         size="lrg"
         isFull="true">
-        Return To List
+        Add Item
       </LinkTo>
     </div>
 

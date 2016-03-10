@@ -1,17 +1,15 @@
 import React from 'react';
 import SignInForm from '../components/SignInForm'
+import LinkTo from '../components/LinkTo'
 
 const HomeView = (props) => (
   <div>
     <div className="card">
       <SignInForm {...props} />
     </div>
-    <button
-      className="btn btn-primary"
-      onClick={() => { props.setView('CREATE_ACCT'); }}
-      type="button">
+    <LinkTo linkTo="CREATE_ACCT" setView={props.setView}>
       Create Account
-    </button>
+    </LinkTo>
   </div>
 );
 

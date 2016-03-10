@@ -1,5 +1,6 @@
 import React from 'react';
 import ErrorMessage from '../components/ErrorMessage';
+import LinkTo from '../components/LinkTo';
 
 const FormTemplateView = (props) => {
   let success = props.reqSuccess;
@@ -11,15 +12,9 @@ const FormTemplateView = (props) => {
       </div>
       {
         success ?
-          <button
-            className="btn btn-primary"
-            onClick={(e) => {
-              e.preventDefault();
-              props.setView('');
-            }}
-            type="buton">
+          <LinkTo setView={props.setView}>
             Sign In
-          </button> :
+          </LinkTo> :
           <div className="card">
             <ErrorMessage errorMsg={props.errorMsg} />
             {props.children[3]}
