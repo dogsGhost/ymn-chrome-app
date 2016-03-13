@@ -39,8 +39,12 @@ export default class App extends Component {
     };
   }
 
+  componentWillUnmount() {
+    base.removeBinding(this.syncRef);
+  }
+
   componentWillMount() {
-    this._fetch();
+    this._syncAuth();
     // TODO: move this so it fires every time UserAddItemView is mounted
     let date = normalizeDateString(new Date());
     this.setState({
@@ -49,16 +53,24 @@ export default class App extends Component {
     });
   }
 
+  componentDidMount() {
+    this._syncItems();
+  }
+
   _syncAuth() {
     this.setState({
       session: base.getAuth() || false
     });
   }
 
-  _fetch() {
+  _sync() {
     this._syncAuth();
+    this._syncItems();
+  }
+
+  _syncItems() {
     if (this.state.session) {
-      base.syncState('items', {
+      this.syncRef = base.syncState('items', {
         context: this,
         state: 'items',
         asArray: true,
@@ -131,7 +143,7 @@ export default class App extends Component {
       // no response means auth was successful
       if (!res) {
         // set session
-        this._fetch();
+        this._sync();
       } else {
         // error handling
         this._setErrorMsg(res.message);
@@ -207,6 +219,7 @@ export default class App extends Component {
   _logOutUser() {
     base.unauth();
     this._syncAuth();
+    base.removeBinding(this.syncRef);
     this._handleViewChange('');
   }
 
