@@ -3,7 +3,7 @@ import Rebase from 're-base';
 import Header from '../layouts/Header';
 import AuthContainer from './AuthContainer';
 import NoAuthContainer from './NoAuthContainer';
-import { normalizeDateString } from '../utils';
+import { filterMatches, normalizeDateString } from '../utils';
 
 let base = Rebase.createClass('https://ymn-react.firebaseio.com');
 
@@ -40,10 +40,23 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    this._syncAuth();
+    this._fetch();
+    // TODO: move this so it fires every time UserAddItemView is mounted
+    let date = normalizeDateString(new Date());
+    this.setState({
+      itemDate: date,
+      curDate: date
+    });
   }
 
-  componentDidMount() {
+  _syncAuth() {
+    this.setState({
+      session: base.getAuth() || false
+    });
+  }
+
+  _fetch() {
+    this._syncAuth();
     if (this.state.session) {
       base.syncState('items', {
         context: this,
@@ -55,17 +68,6 @@ export default class App extends Component {
         }
       });
     }
-
-    // TODO: move this so it fires every time UserAddItemView is mounted
-    this.setState({
-      curDate: normalizeDateString(new Date())
-    });
-  }
-
-  _syncAuth() {
-    this.setState({
-      session: base.getAuth() || false
-    });
   }
 
   _handleViewChange(val) {
@@ -128,11 +130,8 @@ export default class App extends Component {
     }, (res) => {
       // no response means auth was successful
       if (!res) {
-        this._syncAuth();
-        let item = Object.assign({}, this.state.item, {
-          userId: this.state.session.uid
-        });
-        this.setState({ item });
+        // set session
+        this._fetch();
       } else {
         // error handling
         this._setErrorMsg(res.message);
@@ -140,36 +139,69 @@ export default class App extends Component {
     });
   }
 
-  _handleAddItem() {
-    console.log('adding item');
-
-    let newItem = {
-      userId: this.state.session.uid,
-      name: this.state.itemName,
-      dates: [this.state.itemDate]
-    };
+  _handleAddItem(e) {
+    e.preventDefault();
+    let date = this.state.itemDate;
+    let name = this.state.itemName;
+    let items = this.state.items;
 
     // check if item has already been added
+    let matchingItems = utils.filterMatches(name, items, 'name');
     // if yes
-      //check if `itemDate` already exists in `item.dates`
-        // if no, update item
-    // if no
-      // add `itemDate` to `item.dates` array
+    if (matchingItems.length) {
+      let match = matchingItems[0];
+      // we only need to update if the date hasn't already been added
+      if (!match.dates.includes(date)) {
+        this._handleItemUpdate(date, match, items);
+      }
+    } else {
+      this._createItem(name, date, items);
+    }
   }
 
-  _handleItemUpdate() {
-    console.log('update item');
+  _handleItemUpdate(date, matchingItem, items) {
+    if (!items) { throw 'error in _handleItemUpdate'; }
+    console.info('update item');
+    // get index of item we need to update
+    let index = items.indexOf(matchingItem);
+    // copy the item and add the new date to the copy
+    let dupItem = Object.assign({}, matchingItem);
+    dupItem.dates.push(date);
+    // replace the item with the copy
+    this.setState({
+      items: [
+        ...items.slice(0, index),
+        dupItem,
+        ...items.slice(index + 1)
+      ]
+    })
+  }
+
+  _createItem(name, date, items) {
+    // item does not already exist
+    let newItem = {
+      dates: [date],
+      name,
+      userId: this.state.session.uid
+    };
+    // since our data is sync'd with firebase we just update our state
+    this.setState({
+      items: [...items, newItem],
+      itemName: ''
+    });
+    console.info('add new item');
   }
 
   _handleHideItem(id) {
     console.log('hide item');
     this.setState({
-      hiddenItems: this.state.hiddenItems.concat([id])
+      hiddenItems: [...this.state.hiddenItems, id]
     });
   }
 
   _handleUnhideAllItems() {
     console.log('unhide all items');
+    this.setState({ hiddenItems: [] });
   }
 
   _logOutUser() {

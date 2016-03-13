@@ -15,10 +15,10 @@ const ItemList = (props) => {
     let daysSince = utils.getCurDate() - new Date(dates[0]);
 
     // get time between each date
-    let diffs = utils.diffDates(dates);
+    let diffs = dates.map(utils.diffDates);
 
     // average time between dates in days
-    let avg = diffs.reduce(utils.sum) / (diffs.length - 1);
+    let avg = dates.map(utils.diffDates).reduce(utils.sum) / dates.length;
 
     // if num of days between current date and last purchase are greater than
     // or equal to average num of days between purchases, include the item.
