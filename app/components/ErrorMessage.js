@@ -4,7 +4,7 @@ const ErrorMessage = (props) => (
   <div>
     {
       props.errorMsg ?
-        <p className="error">
+        <p className="msg msg-error">
           Sorry, there was an error processing your request. {props.errorMsg}
         </p> :
         false
